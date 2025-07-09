@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grupo VIP - Ganhos Diários</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <img src="declaracao1.jpg" class="body-bg-img bg1" alt="decorativo" aria-hidden="true">
+  <img src="declaracao2.jpeg" class="body-bg-img bg2" alt="decorativo" aria-hidden="true">
+  <img src="declaracao3.jpeg" class="body-bg-img bg3" alt="decorativo" aria-hidden="true">
+  <img src="declaracao4.jpg" class="body-bg-img bg4" alt="decorativo" aria-hidden="true">
+  <img src="imagen.jpg" class="body-bg-img bg5" alt="decorativo" aria-hidden="true">
+  <img src="imagen2.jpg" class="body-bg-img bg6" alt="decorativo" aria-hidden="true">
+  <img src="imagen.3.jpg" class="body-bg-img bg7" alt="decorativo" aria-hidden="true">
+  <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:2000;display:none;"></canvas>
+  <div class="container">
+    <h1>Eles estão lucrando todos os dias… Você vai ficar de fora?</h1>
+    <p class="subtitle">Pessoas comuns estão transformando o celular em uma máquina de fazer dinheiro. Entre no grupo e descubra o segredo.</p>
+    <div class="slot-machine">
+      <div class="slots">
+        <div class="slot" id="slot1">💰</div>
+        <div class="slot" id="slot2">🍒</div>
+        <div class="slot" id="slot3">🍀</div>
+      </div>
+      <button class="spin-btn" id="spinBtn">Girar</button>
+      <div class="slot-message" id="slotMessage"></div>
+    </div>
+    <div class="scarcity">⏳ Últimas vagas disponíveis! Grupo fecha em breve.</div>
+  </div>
+  <footer>
+    ⚠️ Este grupo é para maiores de 18 anos. Resultados não garantem lucro.
+  </footer>
+  <div id="notifications"></div>
+  <script>
+    function makeDraggable(img) {
+      let isDragging = false, startX, startY, origX, origY;
+      img.style.cursor = 'grab';
+      img.style.position = 'fixed';
+      img.addEventListener('mousedown', startDrag);
+      img.addEventListener('touchstart', startDrag, {passive: false});
+      function startDrag(e) {
+        e.preventDefault();
+        isDragging = true;
+        img.style.zIndex = 1000;
+        if (e.type === 'mousedown') {
+          startX = e.clientX;
+          startY = e.clientY;
+        } else {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        }
+        const rect = img.getBoundingClientRect();
+        origX = rect.left;
+        origY = rect.top;
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchmove', onDrag, {passive: false});
+        document.addEventListener('touchend', endDrag);
+      }
+      function onDrag(e) {
+        if (!isDragging) return;
+        let clientX, clientY;
+        if (e.type.startsWith('touch')) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        } else {
+          clientX = e.clientX;
+          clientY = e.clientY;
+        }
+        let dx = clientX - startX;
+        let dy = clientY - startY;
+        img.style.left = (origX + dx) + 'px';
+        img.style.top = (origY + dy) + 'px';
+        img.style.right = 'auto';
+        img.style.bottom = 'auto';
+      }
+      function endDrag() {
+        isDragging = false;
+        img.style.zIndex = 0;
+        document.removeEventListener('mousemove', onDrag);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('touchmove', onDrag);
+        document.removeEventListener('touchend', endDrag);
+      }
+      img.ondragstart = () => false;
+    }
+    document.querySelectorAll('.body-bg-img').forEach(makeDraggable);
+
+    // Slot Machine
+    const slotEmojis = ["💰", "🍒", "🍀", "🔥", "💎", "⭐", "🎰"];
+    const winMessages = [
+      "Parabéns! Você ganhou acesso ao nosso grupo VIP!",
+      "Você desbloqueou o segredo dos vencedores! Clique para entrar no grupo!",
+      "Acesso liberado! Venha para o grupo VIP e descubra as estratégias!",
+      "Você ganhou uma vaga exclusiva no grupo VIP!"
+    ];
+    const slot1 = document.getElementById('slot1');
+    const slot2 = document.getElementById('slot2');
+    const slot3 = document.getElementById('slot3');
+    const spinBtn = document.getElementById('spinBtn');
+    const slotMessage = document.getElementById('slotMessage');
+    let spinning = false;
+    let spinCount = 0;
+    spinBtn.onclick = function() {
+      if (spinning) return;
+      spinning = true;
+      slotMessage.innerHTML = '';
+      let spins = 20 + Math.floor(Math.random()*10);
+      let i = 0;
+      let interval = setInterval(() => {
+        slot1.textContent = slotEmojis[Math.floor(Math.random()*slotEmojis.length)];
+        slot2.textContent = slotEmojis[Math.floor(Math.random()*slotEmojis.length)];
+        slot3.textContent = slotEmojis[Math.floor(Math.random()*slotEmojis.length)];
+        i++;
+        if (i > spins) {
+          clearInterval(interval);
+          let s1 = slotEmojis[Math.floor(Math.random()*slotEmojis.length)];
+          let s2 = slotEmojis[Math.floor(Math.random()*slotEmojis.length)];
+          let s3 = slotEmojis[Math.floor(Math.random()*slotEmojis.length)];
+          slot1.textContent = s1;
+          slot2.textContent = s2;
+          slot3.textContent = s3;
+          spinCount++;
+          if (spinCount === 2) {
+            // Ganha exatamente na 2ª tentativa
+            const msg = winMessages[Math.floor(Math.random()*winMessages.length)];
+            slotMessage.innerHTML = `<div class='win-msg'>${msg}<br><a href='https://wa.me/seulink' class='cta-btn slot-cta'>Entrar no Grupo VIP 🔥</a></div>`;
+            startConfetti();
+          } else {
+            slotMessage.textContent = 'Tente de novo!';
+          }
+          spinning = false;
+        }
+      }, 70);
+    };
+    // Notificações de prova social
+    const notifications = [
+      "João acabou de entrar no grupo VIP!",
+      "Maria está participando do grupo VIP!",
+      "Carlos desbloqueou o acesso ao grupo!",
+      "Ana está aprendendo as melhores estratégias no grupo!",
+      "Pedro garantiu sua vaga no grupo VIP!"
+    ];
+    function showNotification() {
+      const notif = document.createElement('div');
+      notif.className = 'notification';
+      notif.textContent = notifications[Math.floor(Math.random()*notifications.length)];
+      document.getElementById('notifications').appendChild(notif);
+      setTimeout(() => {
+        notif.classList.add('hide');
+        setTimeout(() => notif.remove(), 600);
+      }, 3500);
+    }
+    setInterval(showNotification, 5000);
+
+    // Confetti animation
+    function startConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.display = 'block';
+      const ctx = canvas.getContext('2d');
+      const confettiCount = 120;
+      const confetti = [];
+      for (let i = 0; i < confettiCount; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          r: 6 + Math.random() * 8,
+          d: 2 + Math.random() * 2,
+          color: `hsl(${Math.random()*360},90%,60%)`,
+          tilt: Math.random() * 10 - 10,
+          tiltAngle: 0,
+          tiltAngleIncremental: (Math.random() * 0.07) + 0.05
+        });
+      }
+      let frame = 0;
+      function drawConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < confetti.length; i++) {
+          let c = confetti[i];
+          ctx.beginPath();
+          ctx.lineWidth = c.r;
+          ctx.strokeStyle = c.color;
+          ctx.moveTo(c.x + c.tilt + c.r/3, c.y);
+          ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r);
+          ctx.stroke();
+        }
+        updateConfetti();
+      }
+      function updateConfetti() {
+        for (let i = 0; i < confetti.length; i++) {
+          let c = confetti[i];
+          c.y += c.d;
+          c.tiltAngle += c.tiltAngleIncremental;
+          c.tilt = Math.sin(c.tiltAngle) * 15;
+          if (c.y > canvas.height) {
+            c.x = Math.random() * canvas.width;
+            c.y = -10;
+          }
+        }
+      }
+      function animate() {
+        drawConfetti();
+        frame++;
+        if (frame < 90) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          canvas.style.display = 'none';
+        }
+      }
+      animate();
+    }
+  </script>
+</body>
+</html> 
