@@ -6,6 +6,23 @@
   <title>Grupo VIP - Ganhos Diários</title>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1023319552942252');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1023319552942252&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
 </head>
 <body>
   <img src="declaracao1.jpg" class="body-bg-img bg1" alt="decorativo" aria-hidden="true">
@@ -127,7 +144,7 @@
           if (spinCount === 2) {
             // Ganha exatamente na 2ª tentativa
             const msg = winMessages[Math.floor(Math.random()*winMessages.length)];
-            slotMessage.innerHTML = `<div class='win-msg'>${msg}<br><a href='https://wa.me/seulink' class='cta-btn slot-cta'>Entrar no Grupo VIP 🔥</a></div>`;
+            slotMessage.innerHTML = `<div class='win-msg'>${msg}<br><a href='https://chat.whatsapp.com/CITgqMYsIby0pzmK3Yi3NB?mode=r_c' class='cta-btn slot-cta'>Entrar no Grupo VIP 🔥</a></div>`;
             startConfetti();
           } else {
             slotMessage.textContent = 'Tente de novo!';
